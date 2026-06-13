@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Lista",
+    "slug": "lista",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "lista",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#F6F2EA",
+    "splash": {
+      "backgroundColor": "#1A2657",
+      "resizeMode": "contain"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.lista.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Ginagamit ng Lista ang camera para i-scan ang barcode ng produkto."
+      }
+    },
+    "android": {
+      "package": "com.lista.app",
+      "permissions": ["CAMERA"]
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Ginagamit ng Lista ang camera para i-scan ang barcode ng produkto."
+        }
+      ]
+    ]
+  }
+}

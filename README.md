@@ -1,99 +1,50 @@
-# 📒 Lista — On-Chain Sari-Sari Store Credit
+# 📒 Lista — On-Chain Sari-Sari Store Credit Ledger
 
-> **Stellar Journey to Mastery 2026 · White Belt Deliverable · TadeyRuk**
+Lista digitizes the handwritten **utang** (credit tab) notebook of sari-sari stores into a tamper-evident, real-time **Stellar** blockchain record. This ensures both the store owner (tindera) and the customer (suki) always share the exact same immutable ledger.
 
-Lista replaces handwritten credit notebooks (*lista*) with a tamper-evident on-chain ledger on Stellar Testnet. Every utang (credit) and bayad (payment) is a Stellar transaction. The tab reconstructs entirely from Horizon — no backend, no database.
-
----
-
-## The Problem
-
-Over 1 million sari-sari stores in the Philippines extend informal credit tracked by hand. No timestamps. No receipts. Disputes happen daily. Lista fixes this with a shared, immutable ledger that both the store owner and customer can independently verify.
+This repository contains two implementations of the Lista project:
+1. **Web App (Vite + React)**: A fully functional web interface with Freighter Wallet integration, barcode scanning (via camera), and shared read-only public ledger links.
+2. **Mobile App (React Native + Expo)**: A mobile interface featuring custom design tokens, native screens, navigation, and on-chain syncing.
 
 ---
 
-## Features (White Belt)
+## 💻 Web App (Vite + React)
+The web application is located at the root of this project.
 
-- **Freighter wallet** — owner connects via Freighter browser extension on Stellar Testnet
-- **Barcode scanner** — point camera at product → item name auto-fills from Open Food Facts
-- **Utang logger** — every credit entry is a Stellar transaction with a structured `LISTA:u:` memo
-- **Bayad (payment)** — payments recorded on-chain with `LISTA:b:` memo
-- **Live tab** — reconstructed in real time from Horizon; refresh the page and it's still there
-- **Shared ledger URL** — `?customer=G...&owner=G...` lets anyone view the tab read-only, no wallet needed
-- **Per-entry Explorer links** — every entry links to `stellar.expert` for independent verification
+### Features
+- **Freighter Wallet**: Owner connects via Freighter browser extension on Stellar Testnet.
+- **Barcode Scanner**: Point camera at product → item name auto-fills from Open Food Facts.
+- **Utang Logger**: Log credit entries to the Stellar ledger using `LISTA:u:` text memos.
+- **Bayad Logger**: Log payments to the Stellar ledger using `LISTA:b:` text memos.
+- **Shared Ledger URL**: `?customer=G...&owner=G...` query parameters allow read-only sharing of the tab.
+- **Explorer Links**: Direct links to `stellar.expert` for transaction verification.
 
----
-
-## How It Works
-
-```
-Owner scans item → Freighter signs tx → Horizon records it
-Customer views tab → Horizon replays tx history → Balance computed client-side
-```
-
-### Memo Format
-
-All Lista transactions carry a structured text memo (≤28 bytes):
-
-```
-LISTA:u:<item_name>:<php_amount>    # utang / credit
-LISTA:b:<php_amount>                # bayad / payment
-```
-
-Both operations send 1 stroop (0.0000001 XLM) — the amount is irrelevant; the memo is the receipt.
-
----
-
-## Tech Stack
-
-| Tool | Purpose |
-|------|---------|
-| React + Vite | UI, two views (Owner + Customer) |
-| @stellar/stellar-sdk | Transaction building, Horizon queries, keypairs |
-| @stellar/freighter-api | Freighter wallet bridge (connect, sign) |
-| Horizon Testnet | `https://horizon-testnet.stellar.org` — the only database |
-| Friendbot | Testnet funding for customer session keypair |
-| @zxing/library | Real-time barcode decoding from browser camera |
-| Open Food Facts | Product name/metadata lookup from barcode number |
-
----
-
-## Getting Started
-
-**Prerequisites:** [Freighter wallet extension](https://freighter.app) installed, set to **Testnet**.
+### Quick Start
+Ensure you have the [Freighter Wallet](https://freighter.app) browser extension installed and set to **Testnet**.
 
 ```bash
 npm install
 npm run dev
 ```
-
-Open `http://localhost:5173`, connect Freighter, and start logging tabs.
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ---
 
-## Verifying On-Chain
+## 📱 Mobile App (React Native + Expo)
+The mobile application is located inside the [lista-react-native](file:///home/tadeyruk/Documents/Projects/Lista/lista-react-native) folder.
 
-Every transaction is publicly visible on Stellar Testnet Explorer:
+### Features
+- **Mobile Screens**: Native flow covering Onboarding, Dashboard, Tab Viewer, Camera Scanner, and Custom Keyboard for Payments.
+- **Optimistic State**: Fast client-side updates with background Stellar sync.
+- **CSPRNG Integration**: Cryptographically secure random values integration for React Native.
 
+### Quick Start
+Requires **Node 18+** and the **Expo Go** app on your physical device.
+
+```bash
+cd lista-react-native
+npm install
+npx expo install # Align native dependencies with installed Expo SDK
+npm start
 ```
-https://stellar.expert/explorer/testnet/tx/<hash>
-```
-
-The tab view links directly to each entry. No trust required — the ledger speaks for itself.
-
----
-
-## Belt Progression
-
-| Belt | What Gets Added |
-|------|----------------|
-| ⚪ White Belt (now) | Wallet, barcode scanner, utang/bayad ledger, tab viewer |
-| 🟡 Yellow Belt | Multi-customer management, trust line credit limits, SSE real-time sync |
-| 🟠 Orange Belt | Full store dashboard, complete payment flow |
-| 🟢 Green Belt | Production MVP, real store pilot |
-| 🔵 Blue Belt | 50 users, feedback loop, pitch deck |
-| ⚫ Black Belt | Mainnet launch, security audit |
-
----
-
-*Lista — Built for the barangay.*
+Scan the QR code in your terminal with the **Expo Go** app (Android) or your camera (iOS).
