@@ -30,6 +30,8 @@ import AddItemScreen from './src/screens/AddItemScreen';
 import BayadScreen from './src/screens/BayadScreen';
 import ReceiptScreen from './src/screens/ReceiptScreen';
 import CustomerScreen from './src/screens/CustomerScreen';
+import BuyerHomeScreen from './src/screens/BuyerHomeScreen';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -67,6 +69,7 @@ export default function App() {
           >
             <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ animation: 'fade' }} />
             <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="BuyerHome" component={BuyerHomeScreen} />
             <Stack.Screen name="TabViewer" component={TabViewerScreen} />
             <Stack.Screen name="Scanner" component={ScannerScreen} options={{ animation: 'slide_from_bottom' }} />
             <Stack.Screen name="AddItem" component={AddItemScreen} />

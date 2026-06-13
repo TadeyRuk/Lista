@@ -12,11 +12,11 @@ export const STORE = {
 };
 
 export const CUSTOMERS = [
-  { id: 'tonyo',   initial: 'T', name: 'Mang Tonyo',   sub: 'Tricycle driver · 2 oras ago', avatarBg: '#20306E', walletShort: 'G…9B1C' },
-  { id: 'vangie',  initial: 'V', name: 'Ate Vangie',   sub: 'Kapitbahay · Kahapon',          avatarBg: '#C2603F', walletShort: 'G…7D03' },
-  { id: 'charing', initial: 'C', name: 'Lola Charing', sub: 'Suki · Jun 11',                  avatarBg: '#1F9D6B', walletShort: 'G…2E88' },
-  { id: 'boyet',   initial: 'B', name: 'Boyet',        sub: 'Kanto store · Jun 12',           avatarBg: '#7A4FB0', walletShort: 'G…5A41' },
-  { id: 'jun',     initial: 'J', name: 'Kuya Jun',     sub: 'Construction · Jun 9',           avatarBg: '#9A8FA8', walletShort: 'G…0FC7' },
+  { id: 'tonyo',   initial: 'T', name: 'Mang Tonyo',   sub: 'Tricycle driver \u00B7 2 oras ago', avatarBg: '#20306E', walletShort: 'G\u20269B1C', phone: '+639123456789' },
+  { id: 'vangie',  initial: 'V', name: 'Ate Vangie',   sub: 'Kapitbahay \u00B7 Kahapon',          avatarBg: '#C2603F', walletShort: 'G\u20267D03', phone: '+639234567890' },
+  { id: 'charing', initial: 'C', name: 'Lola Charing', sub: 'Suki \u00B7 Jun 11',                  avatarBg: '#1F9D6B', walletShort: 'G\u20262E88', phone: '+639345678901' },
+  { id: 'boyet',   initial: 'B', name: 'Boyet',        sub: 'Kanto store \u00B7 Jun 12',           avatarBg: '#7A4FB0', walletShort: 'G\u20265A41', phone: '+639456789012' },
+  { id: 'jun',     initial: 'J', name: 'Kuya Jun',     sub: 'Construction \u00B7 Jun 9',           avatarBg: '#9A8FA8', walletShort: 'G\u20260FC7', phone: '+639567890123' },
 ];
 
 // Each entry: { id, item, amount, utang, date, time, txHash, ledger }

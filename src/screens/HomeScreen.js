@@ -12,7 +12,7 @@ import BottomNav from '../components/BottomNav';
 
 export default function HomeScreen({ navigation }) {
   const insets = useSafeAreaInsets();
-  const { customers, totalReceivable, setActiveId, setPerspective } = useApp();
+  const { customers, totalReceivable, setActiveId, setPerspective, setRole } = useApp();
 
   function openSuki(id) {
     setActiveId(id);
@@ -93,7 +93,7 @@ export default function HomeScreen({ navigation }) {
         {/* perspective switch */}
         <Pressable
           style={styles.switchRow}
-          onPress={() => { setActiveId('tonyo'); setPerspective('customer'); navigation.navigate('Customer'); }}
+          onPress={() => { setActiveId('tonyo'); setPerspective('customer'); setRole('buyer'); navigation.navigate('BuyerHome'); }}
         >
           <Text style={styles.switchText}>{'\u{1F9CD}'}  Tingnan bilang suki (Mang Tonyo)  {'\u2192'}</Text>
         </Pressable>
