@@ -54,7 +54,7 @@ export default function BarcodeScanner({ onResult, onClose }) {
         setStatus("Camera unavailable — use manual entry.");
       });
 
-    setStatus("Point at barcode…");
+    setStatus("Itapat ang barcode sa camera…");
 
     return () => {
       readerRef.current?.reset();
@@ -62,13 +62,17 @@ export default function BarcodeScanner({ onResult, onClose }) {
   }, []);
 
   return (
-    <div className="scanner-modal" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="scanner-inner">
-        <h3>Scan Item</h3>
-        <video ref={videoRef} />
-        <p className="scanner-status">{status}</p>
-        <button onClick={onClose} style={{ marginTop: 12, width: "100%" }}>
-          Cancel / Enter Manually
+    <div className="scanner-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="scanner-box">
+        <h3 style={{ textAlign: "center", marginBottom: 16 }}>I-scan ang Produkto</h3>
+        <video ref={videoRef} className="scanner-video" />
+        <p className="scanner-status-text">{status}</p>
+        <button 
+          onClick={onClose} 
+          className="btn-connect"
+          style={{ marginTop: 18, width: "100%", background: "var(--navy-deep)" }}
+        >
+          I-cancel / Ilagay Manwal
         </button>
       </div>
     </div>

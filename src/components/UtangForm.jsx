@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from 'react';
 
 export default function UtangForm({ initialName = "", initialPrice = "", onSubmit, onCancel }) {
   const [name, setName] = useState(initialName);
@@ -14,37 +14,54 @@ export default function UtangForm({ initialName = "", initialPrice = "", onSubmi
   }
 
   return (
-    <form className="utang-form" onSubmit={handleSubmit}>
-      <label>
-        Item
+    <form className="form-card" onSubmit={handleSubmit}>
+      <h3 style={{ marginBottom: 16 }}>Bagong Utang</h3>
+      
+      <div className="form-group">
+        <label className="form-label">Item / Produkto</label>
         <input
           type="text"
+          className="form-input"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Lucky Me Pancit Canton"
           maxLength={15}
           required
         />
-      </label>
-      <label>
-        Price (₱)
+      </div>
+
+      <div className="form-group">
+        <label className="form-label">Halaga (₱)</label>
         <input
           type="number"
+          className="form-input"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
-          placeholder="18"
+          placeholder="18.00"
           min="0.01"
           step="0.01"
           required
         />
-      </label>
-      <div className="form-actions">
-        <button type="submit" disabled={submitting}>
-          {submitting ? "Submitting…" : "Add to Tab"}
+      </div>
+
+      <div className="form-actions" style={{ display: 'flex', gap: '10px', marginTop: 20 }}>
+        <button 
+          type="submit" 
+          disabled={submitting} 
+          className="btn-connect" 
+          style={{ flex: 1, padding: 12 }}
+        >
+          {submitting ? "Submitting…" : "I-lista"}
         </button>
         {onCancel && (
-          <button type="button" onClick={onCancel} disabled={submitting}>
-            Cancel
+          <button 
+            type="button" 
+            onClick={onCancel} 
+            disabled={submitting} 
+            className="btn-action-ghost"
+            style={{ flex: 1 }}
+          >
+            I-cancel
           </button>
         )}
       </div>
