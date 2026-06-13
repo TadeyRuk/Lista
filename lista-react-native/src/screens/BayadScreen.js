@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors, fonts, peso } from '../theme';
@@ -10,10 +10,18 @@ export default function BayadScreen({ navigation }) {
   const insets = useSafeAreaInsets();
   const { activeCustomer, addBayad } = useApp();
   const [amount, setAmount] = useState(100);
+  const [submitting, setSubmitting] = useState(false);
 
-  function confirm() {
-    addBayad(activeCustomer.id, Math.min(amount, activeCustomer.balance));
-    navigation.replace('TabViewer');
+  async function confirm() {
+    setSubmitting(true);
+    try {
+      await addBayad(activeCustomer.id, Math.min(amount, activeCustomer.balance));
+      navigation.replace('TabViewer');
+    } catch (e) {
+      alert("Hindi ma-record ang bayad: " + e.message);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const chips = [
@@ -79,8 +87,16 @@ export default function BayadScreen({ navigation }) {
       </View>
 
       <View style={[styles.footer, { paddingBottom: insets.bottom + 18 }]}>
-        <Pressable style={[styles.cta, amount <= 0 && { opacity: 0.4 }]} disabled={amount <= 0} onPress={confirm}>
-          <Text style={styles.ctaText}>Tanggapin ang bayad · {peso(amount)}</Text>
+        <Pressable 
+          style={[styles.cta, (amount <= 0 || submitting) && { opacity: 0.4 }]} 
+          disabled={amount <= 0 || submitting} 
+          onPress={confirm}
+        >
+          {submitting ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <Text style={styles.ctaText}>Tanggapin ang bayad · {peso(amount)}</Text>
+          )}
         </Pressable>
       </View>
     </View>
@@ -110,6 +126,6 @@ const styles = StyleSheet.create({
   keyText: { fontFamily: fonts.displayMd, fontSize: 24, color: colors.ink },
 
   footer: { paddingHorizontal: 20, paddingTop: 14, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border },
-  cta: { backgroundColor: colors.bayad, paddingVertical: 16, borderRadius: 16, alignItems: 'center' },
+  cta: { backgroundColor: colors.bayad, paddingVertical: 16, borderRadius: 16, alignItems: 'center', justifyContent: 'center', height: 52 },
   ctaText: { fontFamily: fonts.extrabold, fontSize: 16.5, color: '#fff' },
 });

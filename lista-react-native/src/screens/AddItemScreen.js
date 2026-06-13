@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, Pressable, StyleSheet, Image } from 'react-native';
+import { View, Text, ScrollView, Pressable, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors, fonts, peso } from '../theme';
@@ -11,6 +11,7 @@ import Header from '../components/Header';
 export default function AddItemScreen({ navigation, route }) {
   const insets = useSafeAreaInsets();
   const { activeCustomer, addUtang } = useApp();
+  const [submitting, setSubmitting] = useState(false);
 
   const product = route.params?.product || DEMO_PRODUCT;
   const [price, setPrice] = useState(product.price ?? DEMO_PRODUCT.price);
@@ -20,10 +21,17 @@ export default function AddItemScreen({ navigation, route }) {
   const lineTotal = price * qty;
   const memo = buildMemo('utang', slug, lineTotal);
 
-  function confirm() {
-    const label = qty > 1 ? `${product.name} \u00D7${qty}` : product.name;
-    addUtang(activeCustomer.id, label, lineTotal);
-    navigation.replace('TabViewer');
+  async function confirm() {
+    setSubmitting(true);
+    try {
+      const label = qty > 1 ? `${product.name} \u00D7${qty}` : product.name;
+      await addUtang(activeCustomer.id, label, lineTotal);
+      navigation.replace('TabViewer');
+    } catch (e) {
+      alert("Hindi ma-record ang utang: " + e.message);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -83,13 +91,21 @@ export default function AddItemScreen({ navigation, route }) {
         <View style={styles.memoCard}>
           <Text style={styles.memoLabel}>MAI-RE-RECORD ON-CHAIN</Text>
           <Text style={styles.memoText}>{memo}</Text>
-        </View>
+        </div>
       </ScrollView>
 
       {/* footer CTA */}
       <View style={[styles.footer, { paddingBottom: insets.bottom + 18 }]}>
-        <Pressable style={styles.cta} onPress={confirm}>
-          <Text style={styles.ctaText}>Idagdag sa utang · {peso(lineTotal)}</Text>
+        <Pressable 
+          style={[styles.cta, submitting && { opacity: 0.7 }]} 
+          onPress={confirm}
+          disabled={submitting}
+        >
+          {submitting ? (
+            <ActivityIndicator size="small" color={colors.navy} />
+          ) : (
+            <Text style={styles.ctaText}>Idagdag sa utang · {peso(lineTotal)}</Text>
+          )}
         </Pressable>
       </View>
     </View>
@@ -105,7 +121,7 @@ const styles = StyleSheet.create({
   productBrand: { fontSize: 12, fontFamily: fonts.medium, color: colors.mutedSoft, marginTop: 2 },
   offTag: { fontSize: 11, fontFamily: fonts.semibold, color: colors.bayad, marginTop: 6 },
 
-  priceCard: { backgroundColor: '#fff', borderWidth: 1, borderColor: colors.border, borderRadius: 18, padding: 18, marginTop: 14, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  priceCard: { backgroundColor: '#fff', borderWidth: 1, borderColor: colors.border, borderRadius: 18, padding: 18, marginTop: 14, flexDirection: 'row', alignItems: 'center', justifycontent: 'space-between' },
   priceLabel: { fontSize: 12, fontFamily: fonts.semibold, color: colors.muted },
   priceValue: { fontFamily: fonts.display, fontSize: 26, color: colors.ink },
   pencil: { fontSize: 13, color: '#C9C3B5' },
@@ -129,6 +145,6 @@ const styles = StyleSheet.create({
   memoText: { fontFamily: fonts.displayMd, fontSize: 13, color: '#9FE7C6' },
 
   footer: { paddingHorizontal: 20, paddingTop: 14, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border, backgroundColor: colors.paper },
-  cta: { backgroundColor: colors.gold, paddingVertical: 16, borderRadius: 16, alignItems: 'center' },
+  cta: { backgroundColor: colors.gold, paddingVertical: 16, borderRadius: 16, alignItems: 'center', justifyContent: 'center', height: 52 },
   ctaText: { fontFamily: fonts.extrabold, fontSize: 16.5, color: colors.navy },
 });

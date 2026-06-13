@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, ScrollView, Pressable, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, ScrollView, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors, fonts, peso } from '../theme';
@@ -11,8 +11,35 @@ import { ShieldIcon, VerifiedBadge } from '../components/Shield';
 
 export default function TabViewerScreen({ navigation }) {
   const insets = useSafeAreaInsets();
-  const { activeCustomer, activeLedger } = useApp();
+  const { 
+    activeCustomer, 
+    activeLedger, 
+    initializingCustomer, 
+    loadingLedger, 
+    initCustomerAccount, 
+    refreshActiveLedger 
+  } = useApp();
+
   const balances = runningBalances(activeLedger);
+
+  useEffect(() => {
+    if (activeCustomer && !activeCustomer.publicKey) {
+      initCustomerAccount(activeCustomer.id);
+    } else {
+      refreshActiveLedger();
+    }
+  }, [activeCustomer.id]);
+
+  if (initializingCustomer) {
+    return (
+      <View style={[styles.center, { backgroundColor: colors.paper }]}>
+        <ActivityIndicator size="large" color={colors.navy} />
+        <Text style={styles.loadingText}>
+          Fini-fund ang account ni {activeCustomer.name} via Friendbot…
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.paper, paddingTop: insets.top }}>
@@ -20,7 +47,13 @@ export default function TabViewerScreen({ navigation }) {
         title={activeCustomer.name}
         onBack={() => navigation.goBack()}
         subtitle={<VerifiedBadge />}
-        right={<Text style={styles.dots}>{'\u22EF'}</Text>}
+        right={
+          loadingLedger ? (
+            <ActivityIndicator size="small" color={colors.navy} />
+          ) : (
+            <Text style={styles.dots}>{'\u22EF'}</Text>
+          )
+        }
       />
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 18, paddingBottom: insets.bottom + 24 }}>
@@ -28,7 +61,7 @@ export default function TabViewerScreen({ navigation }) {
         <View style={styles.balanceWrap}>
           <Text style={styles.balanceLabel}>Utang ngayon</Text>
           <Text style={styles.balanceAmount}>{peso(activeCustomer.balance)}</Text>
-        </View>
+        </div>
 
         {/* actions */}
         <View style={styles.actions}>
@@ -51,15 +84,19 @@ export default function TabViewerScreen({ navigation }) {
 
         {/* timeline */}
         <View style={{ gap: 9, marginTop: 8 }}>
-          {activeLedger.map((e, i) => (
-            <TxRow
-              key={e.id}
-              entry={e}
-              balance={balances[i]}
-              showChevron
-              onPress={() => navigation.navigate('Receipt', { entryId: e.id })}
-            />
-          ))}
+          {activeLedger.length === 0 ? (
+            <Text style={styles.emptyText}>Walang transaksyon sa timeline na ito.</Text>
+          ) : (
+            activeLedger.map((e, i) => (
+              <TxRow
+                key={e.id}
+                entry={e}
+                balance={balances[i]}
+                showChevron
+                onPress={() => navigation.navigate('Receipt', { entryId: e.id })}
+              />
+            ))
+          )}
         </View>
       </ScrollView>
     </View>
@@ -68,6 +105,9 @@ export default function TabViewerScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   dots: { color: colors.mutedSoft, fontSize: 20 },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
+  loadingText: { marginTop: 14, fontSize: 14, fontFamily: fonts.semibold, color: colors.navy, textAlign: 'center' },
+  emptyText: { textAlign: 'center', color: colors.muted, fontSize: 13, fontFamily: fonts.medium, paddingVertical: 24 },
   balanceWrap: { alignItems: 'center', paddingTop: 8, paddingBottom: 18 },
   balanceLabel: { fontSize: 13, fontFamily: fonts.semibold, color: colors.muted },
   balanceAmount: { fontFamily: fonts.display, fontSize: 46, letterSpacing: -1, color: colors.utang, marginTop: 2 },
